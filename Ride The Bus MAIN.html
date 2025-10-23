@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ride The Bus</title>
+  <link rel="stylesheet" href="Ride The Bus STYLE.css" />
+</head>
+
+<body id="myDIV">
+    <div id="overlay" class="overlay hidden">
+        <div id="overlay-text" class="overlay-text"></div>
+      </div>
+      
+  <!-- Money Display -->
+  <div id="moneyDisplayContainer">💰 Money: $<span id="money">1000</span></div>
+
+  <!-- Loss/Win Screens -->
+  <div id="lossScreen" class="loss-screen hidden"><h1 id="lossText">$100</h1></div>
+  <div id="winScreen" class="win-screen hidden"><h1 id="winText">$0</h1></div>
+
+  <!-- Main Game Container -->
+  <div class="container">
+    <!-- Rules Button -->
+<div class="rules-container">
+    <button id="rulesBtn" class="buttons blue-btn">📜 Show Rules</button>
+  </div>
+  
+  <!-- Rules Modal -->
+  <div id="rulesModal" class="modal hidden">
+    <div class="modal-content">
+      <span id="closeRules" class="close">&times;</span>
+      <h2>Ride The Bus — Rules</h2>
+      <ol>
+        <li>Step 1 — Guess the color: Pick Red or Black.</li>
+        <li>Step 2 — Higher or Lower: Guess if the next card is higher or lower.</li>
+        <li>Step 3 — In Between or Outside: Will the next card be between or outside the previous two?</li>
+        <li>Step 4 — Guess the Suit: Choose the suit of the next card.</li>
+        <li>Win money for correct guesses; lose your bet for wrong guesses.</li>
+      </ol>
+    </div>
+  </div>
+  
+    <h1 class="title glow">Ride The Bus</h1>
+
+    <div class="card-display hidden">
+      <div class="card" id="card">
+        <div class="card-inner" id="cardInner">
+          <div class="card-front">
+            <span class="card-value" id="cardValue"></span>
+            <span class="card-suit hidden" id="cardSuit"></span>
+          </div>
+          <div class="card-back"></div>
+          <div id="cardHistory" class="card-history">
+            
+            <canvas class="history-card" id="cardSlot1" width="60" height="90"></canvas>
+            <canvas class="history-card" id="cardSlot2" width="60" height="90"></canvas>
+            <canvas class="history-card" id="cardSlot3" width="60" height="90"></canvas>
+            <canvas class="history-card" id="cardSlot4" width="60" height="90"></canvas>
+          </div>
+        </div>
+      </div>
+      <h2 id="cardText">Draw a card to start!</h2>
+      <p id="rätt" style="position:absolute; top:80%; left:50%; transform:translate(-50%, -50%); color:white; font-size:24px;"></p>
+    </div>
+
+    <!-- Step 1: Color Guess -->
+    <div class="button-group">
+      <button class="buttons black-btn black" id="CG1" onclick="ColorRB('CG1')">⚫ Black</button>
+      <button class="buttons red-btn red" id="CG2" onclick="ColorRB('CG2')">🔴 Red</button>
+    </div>
+
+    <!-- Step 2: Higher or Lower -->
+    <div class="button-group">
+      <button class="buttons black-btn black hidden" id="h" onclick="higherOrLower('higher')">😶‍🌫️ Higher</button>
+      <button class="buttons red-btn red hidden" id="l" onclick="higherOrLower('lower')">📉 Lower</button>
+    </div>
+
+    <!-- Step 3: In Between or Outside -->
+    <div class="button-group">
+      <button class="buttons black-btn black hidden" id="in" onclick="inBetweenOrOutside('in')">↔️ In Between</button>
+      <button class="buttons red-btn red hidden" id="out" onclick="inBetweenOrOutside('out')">🏞️ Outside</button>
+    </div>
+
+    <!-- Step 4: Suit Guess -->
+    <div class="button-group" id="suit-buttons">
+      <button class="buttons red-btn red hidden" id="Hearts" onclick="guessSuit('Hearts')">♥ Hearts</button>
+      <button class="buttons red-btn red hidden" id="Diamonds" onclick="guessSuit('Diamonds')">♦ Diamonds</button>
+      <button class="buttons black-btn black hidden" id="Spades" onclick="guessSuit('Spades')">♠ Spades</button>
+      <button class="buttons black-btn black hidden" id="Clubs" onclick="guessSuit('Clubs')">♣ Clubs</button>
+    </div>
+
+    <!-- Restart Button -->
+    <div class="restart-container">
+<button id="restartBtn" class="buttons green-btn">🔄 Cashout</button>
+    </div>
+
+    <!-- Hidden Result Text -->
+    <div id="hidden1" style="display:none;"><h1 class="ResultText"></h1></div>
+
+    <!-- Bet Slider -->
+    <div class="bet-container">
+      <label for="betSlider">Bet: $<span id="betAmount">0</span></label>
+      <input type="range" id="betSlider" min="1" max="1000" value="100" step="1">
+    </div>
+  </div>
+
+  <script src="Ride The Bus Script.js"></script>
+</body>
+</html>
