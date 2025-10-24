@@ -109,8 +109,17 @@ h2 {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 28px;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  animation: slideIn 0.8s ease;
+  animation: fadeIn 1s ease;
 }
+
+ul {
+  animation: slideIn 1s ease;
+}
+
+h4 {
+  animation: slideIn 1s ease;
+}
+
 .hidden{
   display: none;
 }

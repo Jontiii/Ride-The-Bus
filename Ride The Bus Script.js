@@ -1,22 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   // ====== RULES MODAL ======
-const rulesBtn = document.getElementById("rulesBtn");
-const rulesModal = document.getElementById("rulesModal");
-const closeRules = document.getElementById("closeRules");
+  const rulesBtn = document.getElementById("rulesBtn");
+  const rulesModal = document.getElementById("rulesModal");
+  const closeRules = document.getElementById("closeRules");
 
-rulesBtn.addEventListener("click", () => {
-  rulesModal.classList.remove("hidden");
-});
+  rulesBtn.addEventListener("click", () => {
+    rulesModal.classList.remove("hidden");
+  });
 
-closeRules.addEventListener("click", () => {
-  rulesModal.classList.add("hidden");
-});
+  closeRules.addEventListener("click", () => {
+    rulesModal.classList.add("hidden");
+  });
 
-// Close modal on click outside
-rulesModal.addEventListener("click", (e) => {
-  if(e.target === rulesModal) rulesModal.classList.add("hidden");
-});
+  // Close modal on click outside
+  rulesModal.addEventListener("click", (e) => {
+    if(e.target === rulesModal) rulesModal.classList.add("hidden");
+  });
 
   // ====== DOM ELEMENTS ======
   const betSlider = document.getElementById("betSlider");
@@ -30,10 +30,11 @@ rulesModal.addEventListener("click", (e) => {
   let deck = [];
   let money = parseInt(localStorage.getItem("money")) || 100;
   moneyDisplay.textContent = money;
-
-
   let currentBet = money;
   let betLocked = false;
+
+  // Make potentialWin global so it persists between rounds
+  let potentialWin = 0;
 
   const multipliers = {
     color: 1.5,
@@ -104,7 +105,7 @@ rulesModal.addEventListener("click", (e) => {
     setTimeout(() => overlay.classList.remove("visible"), duration);
   }
 
-  // ====== CARD CANVAS DISPLAY ======
+  // ====== CARD DISPLAY ======
   function showCardCanvas(card) {
     let historyContainer = document.getElementById("cardHistoryContainer");
     if (!historyContainer) {
@@ -131,7 +132,6 @@ rulesModal.addEventListener("click", (e) => {
     canvasWrapper.appendChild(canvas);
     const ctx = canvas.getContext("2d");
 
-    // Draw backside
     ctx.fillStyle = "#333";
     ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.strokeStyle = "black";
@@ -139,14 +139,11 @@ rulesModal.addEventListener("click", (e) => {
 
     historyContainer.appendChild(canvasWrapper);
 
-    // Flip animation
     canvasWrapper.style.transform = "rotateY(180deg)";
     canvasWrapper.style.transition = "transform 0.6s";
 
     setTimeout(() => {
       canvasWrapper.style.transform = "rotateY(0deg)";
-
-      // Draw front
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = "black";
@@ -163,39 +160,30 @@ rulesModal.addEventListener("click", (e) => {
     const cards = historyContainer.querySelectorAll("#cardHistoryContainer > div");
     if(cards.length > 15) cards[0].remove();
   }
-  
-  // ====== GAME FLOW ======
-  // helper to set rule text (and optionally hide it)
-  function setRule(text) {
-    if (!ruleText) return;
-    if (!text) {
-      ruleText.classList.add('hidden');
-      ruleText.textContent = '';
-    } else {
-      ruleText.classList.remove('hidden');
-      ruleText.textContent = text;
-    }
-  }
 
-  // ====== GAME FLOW ======
+  // ====== GAME LOGIC ======
+  function handleStep(amount) {
+    showOverlay(`You can win +$${potentialWin} Keep going`, "gold", 1500);
+    launchConfetti(200);
+  }
   function handleWin(amount) {
-    updateMoney(amount);
-    showOverlay(`✅ You won $${amount}! Keep going!`, "lightgreen", 1500);
-    // rule remains the same until the next action triggers a step change
+    updateMoney(potentialWin);
+    showOverlay(`✅ You won $${amount}! good job!`, "lightgreen", 1500);
   }
 
+  function reimbursement() {
+    showOverlay("Here you go, 100$, go and win now -Mom", "yellow", 1500);
+  }
   function handleLoss() {
-    showOverlay(`💥 You lost $${currentBet}! 💥`, "red", 2000);
+    showOverlay(`💥 You lost $${currentBet}! 💥`, "red", 1500);
     updateMoney(-currentBet);
     toggleButtons(["CG1","CG2","h","l","in","out","Hearts","Diamonds","Spades","Clubs"], false);
     suitButtonsContainer.classList.add("hidden");
-    // clear rule because game will reset
-    setRule('');
     setTimeout(restartGame, 2000);
   }
 
-
   function handleVictory() {
+    updateMoney(potentialWin);
     showOverlay(`🎉 YOU WIN THE GAME! 🎉`, "gold", 3000);
     launchConfetti(1000);
     toggleButtons(["CG1","CG2","h","l","in","out","Hearts","Diamonds","Spades","Clubs"], false);
@@ -203,7 +191,7 @@ rulesModal.addEventListener("click", (e) => {
     setTimeout(restartGame, 3000);
   }
 
-  function launchConfetti(count=1000) {
+  function launchConfetti(count=100) {
     const container = document.getElementById("confetti-container") || document.body;
     for (let i = 0; i < count; i++) {
       const c = document.createElement("div");
@@ -217,14 +205,6 @@ rulesModal.addEventListener("click", (e) => {
     }
   }
 
-  function showResultText(text, color) {
-    const cardTextEl = document.getElementById("cardText");
-    if (cardTextEl) {
-      cardTextEl.textContent = text;
-      cardTextEl.style.color = color;
-    }
-  }
-
   // ====== GAME STAGES ======
   function ColorRB(buttonId) {
     if (!currentCardT1) currentCardT1 = drawCard();
@@ -233,14 +213,12 @@ rulesModal.addEventListener("click", (e) => {
 
     const correct = (currentCardT1.color === "black" && buttonId==="CG1") ||
                     (currentCardT1.color === "red" && buttonId==="CG2");
-    const potentialWin = Math.floor(currentBet * multipliers.color);
+    potentialWin = Math.floor(currentBet * multipliers.color);
 
     if(correct) {
-      handleWin(potentialWin);
+      handleStep();
       toggleButtons(["CG1","CG2"], false);
       toggleButtons(["h","l"], true);
-      // advance to next rule
-      setRule('Step 2 — Higher or Lower: Guess if the next card is higher or lower.');
       currentCardT2 = drawCard();
     } else handleLoss();
   }
@@ -253,17 +231,15 @@ rulesModal.addEventListener("click", (e) => {
     const values = {"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,"10":10,"J":11,"Q":12,"K":13,"A":14};
     const c1 = values[currentCardT1.value];
     const c2 = values[currentCardT2.value];
-    const potentialWin = Math.floor(currentBet * multipliers.highLow);
+    potentialWin = Math.floor(currentBet * multipliers.highLow);
 
-    const correct = (guess==="higher" && c2>c1) || (guess==="lower" && c2<c1);
+    const correct = (guess==="higher" && c2>=c1) || (guess==="lower" && c2<=c1);
 
     toggleButtons(["h","l"], false);
     toggleButtons(["in","out"], true);
 
     if(correct) {
-      handleWin(potentialWin);
-      // next rule
-      setRule('Step 3 — In Between or Outside: Will the next card be in between the previous two or outside them?');
+      handleStep();
     } else handleLoss();
   }
 
@@ -276,23 +252,21 @@ rulesModal.addEventListener("click", (e) => {
     showCardCanvas(card3);
     const c3 = values[card3.value];
     const low = Math.min(c1,c2), high = Math.max(c1,c2);
-    const potentialWin = Math.floor(currentBet * multipliers.inOut);
+    potentialWin = Math.floor(currentBet * multipliers.inOut);
 
-    const correct = (choice==="in" && c3>low && c3<high) ||
-                    (choice==="out" && (c3<low || c3>high));
+    const correct =   (choice === "in" && c3 > low && c3 < high) ||
+                      (choice === "out" && (c3 <= low || c3 >= high));
 
     toggleButtons(["in","out"], false);
     if(correct) {
-      handleWin(potentialWin);
+      handleStep();
     } else {
       handleLoss();
       return;
     }
 
-    // Show suit buttons and set rule for last step
     suitButtonsContainer.classList.remove("hidden");
     toggleButtons(["Hearts","Diamonds","Spades","Clubs"], true);
-    setRule('Step 4 — Guess the Suit: Choose the suit of the next card.');
   }
 
   function guessSuit(suit) {
@@ -300,18 +274,15 @@ rulesModal.addEventListener("click", (e) => {
     if (!card4) return;
     showCardCanvas(card4);
     const correct = card4.suit === suit;
-    const potentialWin = Math.floor(currentBet * multipliers.suit);
+    potentialWin = Math.floor(currentBet * multipliers.suit);
 
     toggleButtons(["Hearts","Diamonds","Spades","Clubs"], false);
     suitButtonsContainer.classList.add("hidden");
 
     if(correct) {
-      updateMoney(potentialWin);
-      handleVictory();
+      handleVictory(potentialWin);
+      restartGame();
     } else handleLoss();
-
-    // After final step, clear rule (either victory or loss will restart)
-    setRule('');
   }
 
   // ====== RESTART GAME ======
@@ -323,15 +294,16 @@ rulesModal.addEventListener("click", (e) => {
 
     money = parseInt(localStorage.getItem("money")) || 100;
     moneyDisplay.textContent = money;
-    
     betSlider.max = money;
     if (currentBet > money) {
       currentBet = money;
       betSlider.value = currentBet;
     } 
-    if (currentBet < 1) {
+    if (currentBet < 1)  {
+      reimbursement();
       currentBet = 100;
     }
+   
     betAmountDisplay.textContent = currentBet;
 
     toggleButtons(["CG1","CG2"], true);
@@ -342,20 +314,15 @@ rulesModal.addEventListener("click", (e) => {
     const historyContainer = document.getElementById("cardHistoryContainer");
     if (historyContainer) historyContainer.innerHTML = "";
 
-    showResultText("Draw a card to start! Black or red?", "white");
+    potentialWin = 0; // reset on full restart
   }
-  // ====== RESTART BUTTON (force money refresh too) ======
+
+  // RESTART BUTTON NOW CASHES OUT (acts like cashout)
   document.getElementById("restartBtn")?.addEventListener("click", () => {
-    money = parseInt(localStorage.getItem("money")) || 100;
-    moneyDisplay.textContent = money;
-
-    betSlider.max = money;
-    if (currentBet > money) {
-      currentBet = money;
-      betSlider.value = currentBet;
+    if (potentialWin > 0) {
+      handleWin(potentialWin);
+      potentialWin = 0;
     }
-    betAmountDisplay.textContent = currentBet;
-
     restartGame();
   });
 

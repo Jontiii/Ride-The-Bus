@@ -23,20 +23,33 @@
   <div class="container">
     <!-- Rules Button -->
 <div class="rules-container">
-    <button id="rulesBtn" class="buttons blue-btn buttonBT">📜 Show Rules</button>
+    <button id="rulesBtn" class="buttons blue-btn buttonBT">📜 Rules</button>
   </div>
   
   <!-- Rules Modal -->
   <div id="rulesModal" class="modal hidden">
     <div class="modal-content">
       <span id="closeRules" class="close">&times;</span>
-      <h2>Ride The Bus — Rules</h2>
-      <ol>
-        <li>Guess the color: Pick Red or Black.</li>
-        <li>Higher or Lower: Guess if the next card is higher or lower.</li>
-        <li>In Between or Outside: Will the next card be between or outside the previous two?</li>
-        <li> Guess the Suit: Choose the suit of the next card.</li>
-        <li>Win money for correct guesses; lose your bet for wrong guesses.</li>
+      <h2>Ride The Bus Rules</h2>
+      <ol> <br>
+        <ul>Step 1: Guess the color: Pick Red or Black.</ul> <br>
+        <ul>Step 2: Higher or Lower: Guess if the next card is higher or lower.</ul> <br>
+        <ul>Step 3: In Between or Outside: Will the next card be between or outside the previous two?</ul> <br>
+        <ul> Step 4: Guess the Suit: Choose the suit of the next card.</ul> <br>
+        <ul>Win money for correct guesses; lose your bet for wrong guesses.</ul> <br>
+        <h2> Card Values</h2> <br>
+        <ul> Number card = value, 1 = 1, etc </ul> <br>
+        <h2> Face cards value</h2> <br>
+        <ul> J, Q, K = 10 </ul> 
+        <ul> A = 11 </ul> <br>
+        <h2>Earnings</h2>
+        <ul>Step 1: 1.5x</ul>
+        <ul>Step 2: 2x</ul>
+        <ul>Step 3: 4x</ul>
+        <ul>Step 4: 20x</ul> <br>
+        <h4>You earn the multiplied bet, so if you bet 100$ and win the first Step you <mark>earn</mark> 150$ and have 250$ after cashout</h4>
+
+
       </ol>
     </div>
   </div>
@@ -76,8 +89,8 @@
 
     <!-- Step 3: In Between or Outside -->
     <div class="button-group">
-      <button class="buttons black-btn black hidden" id="in" onclick="inBetweenOrOutside('in')">↔️ In Between</button>
-      <button class="buttons red-btn red hidden" id="out" onclick="inBetweenOrOutside('out')">🏞️ Outside</button>
+      <button class="buttons black-btn black hidden" id="in" onclick="inBetweenOrOutside('in')">↔️ Inbetween </button>
+      <button class="buttons red-btn red hidden" id="out" onclick="inBetweenOrOutside('out')">🏞️ Outside </button>
     </div>
 
     <!-- Step 4: Suit Guess -->
@@ -90,7 +103,7 @@
 
     <!-- Restart Button -->
     <div class="restart-container">
-<button id="restartBtn" class="buttons green-btn">🔄 Try again and/or Cashout </button>
+<button id="restartBtn" class="buttons green-btn"> Try again and/or Cashout </button>
     </div>
 
     <!-- Hidden Result Text -->
@@ -98,8 +111,8 @@
 
     <!-- Bet Slider -->
     <div class="bet-container">
-      <label for="betSlider">Bet: $<span id="betAmount">0</span></label>
-      <input type="range" id="betSlider" min="1" max="2" value="100" step="1">
+      <label for="betSlider">Bet: $<span id="betAmount"></span></label>
+      <input type="range" id="betSlider" min="1" max="" value="max" step="1">
     </div>
   </div>
 
