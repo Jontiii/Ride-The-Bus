@@ -23,7 +23,7 @@
   <div class="container">
     <!-- Rules Button -->
 <div class="rules-container">
-    <button id="rulesBtn" class="buttons blue-btn">📜 Show Rules</button>
+    <button id="rulesBtn" class="buttons blue-btn buttonBT">📜 Show Rules</button>
   </div>
   
   <!-- Rules Modal -->
@@ -32,17 +32,16 @@
       <span id="closeRules" class="close">&times;</span>
       <h2>Ride The Bus — Rules</h2>
       <ol>
-        <li>Step 1 — Guess the color: Pick Red or Black.</li>
-        <li>Step 2 — Higher or Lower: Guess if the next card is higher or lower.</li>
-        <li>Step 3 — In Between or Outside: Will the next card be between or outside the previous two?</li>
-        <li>Step 4 — Guess the Suit: Choose the suit of the next card.</li>
+        <li>Guess the color: Pick Red or Black.</li>
+        <li>Higher or Lower: Guess if the next card is higher or lower.</li>
+        <li>In Between or Outside: Will the next card be between or outside the previous two?</li>
+        <li> Guess the Suit: Choose the suit of the next card.</li>
         <li>Win money for correct guesses; lose your bet for wrong guesses.</li>
       </ol>
     </div>
   </div>
   
     <h1 class="title glow">Ride The Bus</h1>
-
     <div class="card-display hidden">
       <div class="card" id="card">
         <div class="card-inner" id="cardInner">
@@ -52,7 +51,6 @@
           </div>
           <div class="card-back"></div>
           <div id="cardHistory" class="card-history">
-            
             <canvas class="history-card" id="cardSlot1" width="60" height="90"></canvas>
             <canvas class="history-card" id="cardSlot2" width="60" height="90"></canvas>
             <canvas class="history-card" id="cardSlot3" width="60" height="90"></canvas>
@@ -92,7 +90,7 @@
 
     <!-- Restart Button -->
     <div class="restart-container">
-<button id="restartBtn" class="buttons green-btn">🔄 Cashout</button>
+<button id="restartBtn" class="buttons green-btn">🔄 Try again and/or Cashout </button>
     </div>
 
     <!-- Hidden Result Text -->
@@ -101,7 +99,7 @@
     <!-- Bet Slider -->
     <div class="bet-container">
       <label for="betSlider">Bet: $<span id="betAmount">0</span></label>
-      <input type="range" id="betSlider" min="1" max="1000" value="100" step="1">
+      <input type="range" id="betSlider" min="1" max="2" value="100" step="1">
     </div>
   </div>
 
